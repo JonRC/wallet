@@ -1,0 +1,7 @@
+services:
+  account-server:
+    build: ./account-server
+    ports:
+      - "8080:80"
+    env_file:
+      - ./account-server/.env

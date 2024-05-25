@@ -1,0 +1,6 @@
+packages:
+  - account-server
+  - open-wallet-server
+  - statement-worker
+  - nginx
+  - redis
