@@ -4,17 +4,23 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "concurrently -r -n tscType,runtime \"tsc --noEmit --watch\" \"tsx --watch --inspect src/main.ts\""
+    "dev": "nodemon --watch src --ext ts --exec \"npm run dev\" --signal SIGTERM",
+    "start": "tsc && tsc-alias && node dist/main.js",
+    "migration": "tsc && tsc-alias && node dist/Database/runMigrations.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Jonathan Rodrigues Cardoso - JonRC",
   "license": "ISC",
   "dependencies": {
     "@fastify/swagger": "^8.14.0",
     "@fastify/swagger-ui": "^3.0.0",
+    "concurrently": "^8.2.2",
+    "dotenv": "^16.4.5",
     "fastify": "^4.27.0",
     "fastify-type-provider-zod": "^1.2.0",
-    "pg": "^8.11.5"
+    "nodemon": "^3.1.1",
+    "pg": "^8.11.5",
+    "tsc-alias": "^1.8.10"
   },
   "devDependencies": {
     "@types/node": "^20.12.12",

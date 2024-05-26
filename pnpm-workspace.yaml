@@ -1,5 +1,6 @@
 packages:
   - account-server
+  - account-postgres
   - open-wallet-server
   - statement-worker
   - nginx

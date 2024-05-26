@@ -1,2 +1,4 @@
 # NodeJs
 **/node_modules
+**/dist
+**/account-postgres/data

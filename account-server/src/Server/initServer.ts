@@ -7,6 +7,7 @@ import {
 import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
 import fs from "fs/promises";
+import { join } from "path";
 
 export const initServer = async () => {
   const app = fastify();
@@ -25,7 +26,7 @@ export const initServer = async () => {
   });
 
   app.register(fastifySwaggerUi, {
-    routePrefix: "/docs",
+    // routePrefix: "/docs",
   });
 
   app.after(() => {
@@ -35,7 +36,7 @@ export const initServer = async () => {
   await app.ready();
 
   const openApiYaml = app.swagger({ yaml: true });
-  await fs.writeFile("docs/openapi.yaml", openApiYaml);
+  await fs.writeFile(join("src", "docs", "openapi.yml"), openApiYaml);
 
   await app.listen({
     port: 3000,
