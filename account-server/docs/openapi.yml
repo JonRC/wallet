@@ -1,0 +1,56 @@
+openapi: 3.0.3
+info:
+  title: Wallet Project - Account Server API
+  description: API for account management. Transactions, balances, etc.
+  version: 1.0.0
+components:
+  securitySchemes:
+    apikey:
+      type: apiKey
+      in: header
+      name: Authorization
+  schemas: {}
+paths:
+  /balance/:
+    get:
+      tags:
+        - Balance
+      parameters:
+        - schema:
+            type: string
+            format: uuid
+          in: header
+          name: user-id
+          required: true
+      security:
+        - apikey: []
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  balance:
+                    type: number
+                required:
+                  - balance
+                additionalProperties: false
+        "404":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+                additionalProperties: false
+servers:
+  - url: http://localhost:3030
+    description: Development server
+  - url: https://account.wallet.com
+    description: Production server

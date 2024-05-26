@@ -1,16 +1,21 @@
-import { Transaction } from "./Transaction";
+import z from "zod";
 
 export const transactionItemTypes = ["MAIN", "TAX", "FEE"] as const;
-export type TransactionItemType = (typeof transactionItemTypes)[number];
+export const TransactionItemType = z.enum(transactionItemTypes);
+export type TransactionItemType = z.infer<typeof TransactionItemType>;
 
-export type TransactionItem = {
-  id: string;
-  transactionId: Transaction["id"];
+export const TransactionItem = z.object({
+  id: z.string(),
+  transactionId: z.string(),
 
-  value: number;
-  description: string;
+  value: z.number(),
+  description: z.string(),
 
-  type: TransactionItemType;
+  type: TransactionItemType,
+  createdAt: z.preprocess(
+    (value) => typeof value === "string" && new Date(value),
+    z.date()
+  ),
+});
 
-  createdAt: Date;
-};
+export type TransactionItem = z.infer<typeof TransactionItem>;

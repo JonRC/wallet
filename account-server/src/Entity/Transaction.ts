@@ -1,3 +1,5 @@
+import z from "zod";
+
 export const transactionTypes = [
   "TRANSFER",
   "OPEN_WALLET",
@@ -7,7 +9,8 @@ export const transactionTypes = [
   "TAXE",
   "FEE",
 ] as const;
-export type TransactionType = (typeof transactionTypes)[number];
+export const TransactionType = z.enum(transactionTypes);
+export type TransactionType = z.infer<typeof TransactionType>;
 
 export const receiverTypes = [
   "USER",
@@ -17,22 +20,29 @@ export const receiverTypes = [
   "CREDIT_CARD",
   "POS",
 ] as const;
-export type ReceiverType = (typeof receiverTypes)[number];
+export const ReceiverType = z.enum(receiverTypes);
+export type ReceiverType = z.infer<typeof ReceiverType>;
 
 export const senderTypes = ["USER", "PIX", "BANK_ACCOUNT", "POS"] as const;
-export type SenderType = (typeof senderTypes)[number];
+export type SenderType = z.infer<typeof SenderType>;
+export const SenderType = z.enum(senderTypes);
 
-export type Transaction = {
-  id: string;
-  userId: string;
+export const Transaction = z.object({
+  id: z.string(),
+  userId: z.string(),
 
-  type: TransactionType;
-  receiverType: ReceiverType;
-  senderType: SenderType;
+  type: TransactionType,
+  receiverType: ReceiverType,
+  senderType: SenderType,
 
-  receiverReference: string;
-  senderReference: string;
-  description: string;
+  receiverReference: z.string(),
+  senderReference: z.string(),
+  description: z.string(),
 
-  createdAt: Date;
-};
+  createdAt: z.preprocess(
+    (value) => typeof value === "string" && new Date(value),
+    z.date()
+  ),
+});
+
+export type Transaction = z.infer<typeof Transaction>;

@@ -1,8 +1,0 @@
-openapi: 3.0.3
-info:
-  title: Wallet Project - Account Server API
-  description: API for account management. Transactions, balances, etc.
-  version: 1.0.0
-components:
-  schemas: {}
-paths: {}

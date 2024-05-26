@@ -1,3 +1,4 @@
+import { checkIsDockerContainer } from "@/Util/isDockerContainer";
 import { Pool } from "pg";
 
 let poolSingleton: Pool | null = null;
@@ -5,8 +6,11 @@ let poolSingleton: Pool | null = null;
 export const pool = () => {
   if (poolSingleton) return poolSingleton;
 
+  const isDockerContainer = checkIsDockerContainer();
+  const host = isDockerContainer ? "account-postgres" : "localhost";
+
   const newPool = new Pool({
-    host: "localhost",
+    host,
     user: "wallet",
     password: "wallet",
     max: 20,
