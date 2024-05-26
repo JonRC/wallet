@@ -1,10 +1,10 @@
 #!/bin/bash
 
-docker compose up account-postgres
+docker compose up account-postgres -d
 
-docker build -t account-migration -f Dockerfile.migration account-server
-docker run account-migration
+docker build -t account-migration -f account-server/migration.Dockerfile account-server
+docker run --network host account-migration
 
-docker compose down
+# docker compose down
 
 

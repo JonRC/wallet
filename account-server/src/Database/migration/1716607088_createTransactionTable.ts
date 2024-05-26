@@ -9,7 +9,6 @@ const createTransactionTable = `
     'FEE'
   );
 
-
   CREATE TYPE receiver_type_enum AS ENUM (
     'USER',
     'PIX',
@@ -26,7 +25,7 @@ const createTransactionTable = `
     'POS'
   );
 
-  CREATE TABLE IF NOT EXISTS transactions (
+  CREATE TABLE IF NOT EXISTS transaction (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL,
     type transaction_type_enum NOT NULL,

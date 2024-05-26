@@ -1,6 +1,6 @@
 import { Transaction } from "./Transaction";
 
-export const transactionItemTypes = ["MAIN", "TAXE", "FEE"] as const;
+export const transactionItemTypes = ["MAIN", "TAX", "FEE"] as const;
 export type TransactionItemType = (typeof transactionItemTypes)[number];
 
 export type TransactionItem = {

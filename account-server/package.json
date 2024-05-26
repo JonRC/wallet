@@ -20,7 +20,8 @@
     "fastify-type-provider-zod": "^1.2.0",
     "nodemon": "^3.1.1",
     "pg": "^8.11.5",
-    "tsc-alias": "^1.8.10"
+    "tsc-alias": "^1.8.10",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/node": "^20.12.12",
