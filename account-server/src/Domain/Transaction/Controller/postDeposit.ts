@@ -37,6 +37,9 @@ const response = {
   200: z.object({
     transactionId: z.string(),
   }),
+  501: z.object({
+    message: z.string(),
+  }),
 } as const;
 
 export const postDeposit = async (app: FastifyInstance) =>
@@ -72,5 +75,9 @@ export const postDeposit = async (app: FastifyInstance) =>
 
         return reply.code(200).send({ transactionId });
       }
+
+      return reply.code(501).send({
+        message: `Operation not implemented for type ${body.senderType} from ${body.senderType} to ${body.receiverType}`,
+      });
     },
   });

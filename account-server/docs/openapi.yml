@@ -61,7 +61,7 @@ paths:
                 required:
                   - message
                 additionalProperties: false
-  /transaction/deposit:
+  /transactions/deposit:
     post:
       tags:
         - Transaction
@@ -120,7 +120,19 @@ paths:
                 required:
                   - transactionId
                 additionalProperties: false
-  /transaction/{id}:
+        "501":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+                additionalProperties: false
+  /transactions/{id}:
     get:
       tags:
         - Transaction
@@ -241,7 +253,7 @@ paths:
                 required:
                   - detailedTransaction
                 additionalProperties: false
-  /transaction/withdraw:
+  /transactions/withdraw:
     post:
       tags:
         - Transaction
@@ -298,6 +310,104 @@ paths:
                     type: string
                 required:
                   - transactionId
+                additionalProperties: false
+        "501":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+                additionalProperties: false
+  /transactions/:
+    get:
+      tags:
+        - Transaction
+      parameters:
+        - schema:
+            type: string
+            format: uuid
+          in: header
+          name: user-id
+          required: true
+      security:
+        - customer: []
+        - internal: []
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  transactions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        userId:
+                          type: string
+                        value:
+                          type: number
+                        type:
+                          type: string
+                          enum:
+                            - TRANSFER
+                            - OPEN_WALLET
+                            - LOAN
+                            - DEBIT
+                            - REVERSAL
+                            - TAXE
+                            - FEE
+                            - CASH
+                        receiverType:
+                          type: string
+                          enum:
+                            - USER
+                            - PIX
+                            - BANK_ACCOUNT
+                            - BANK_SLIP
+                            - CREDIT_CARD
+                            - POS
+                            - ATM
+                        senderType:
+                          type: string
+                          enum:
+                            - USER
+                            - PIX
+                            - BANK_ACCOUNT
+                            - POS
+                            - ATM
+                        receiverReference:
+                          type: string
+                        senderReference:
+                          type: string
+                        description:
+                          type: string
+                        createdAt:
+                          type: string
+                          format: date-time
+                      required:
+                        - id
+                        - userId
+                        - value
+                        - type
+                        - receiverType
+                        - senderType
+                        - receiverReference
+                        - senderReference
+                        - description
+                        - createdAt
+                      additionalProperties: false
+                required:
+                  - transactions
                 additionalProperties: false
 servers:
   - url: http://localhost:4000

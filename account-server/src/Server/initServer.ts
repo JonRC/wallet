@@ -76,7 +76,7 @@ export const initServer = async () => {
       reply.send({ status: "ok", serverId })
     );
     app.register(balanceRouter, { prefix: "/balance" });
-    app.register(transactionRouter, { prefix: "/transaction" });
+    app.register(transactionRouter, { prefix: "/transactions" });
   });
 
   app.setErrorHandler((error, request, reply) => {
