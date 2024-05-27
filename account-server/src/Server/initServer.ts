@@ -12,8 +12,10 @@ import { join } from "path";
 import { balanceRouter } from "@/Domain/Balance/Controller/balanceRouter";
 import { SwaggerTheme, SwaggerThemeNameEnum } from "swagger-themes";
 import { transactionRouter } from "@/Domain/Transaction/Controller/transactionRouter";
+import { randomUUID } from "crypto";
 
 const port = 3000;
+const serverId = randomUUID().slice(0, 8);
 
 export const initServer = async () => {
   const app = fastify();
@@ -33,7 +35,7 @@ export const initServer = async () => {
         version: "1.0.0",
       },
       servers: [
-        { url: `http://localhost:${port}`, description: "Development server" },
+        { url: `http://localhost:4000`, description: "Development server" },
         { url: "https://account.wallet.com", description: "Production server" },
       ],
 
@@ -70,6 +72,9 @@ export const initServer = async () => {
   });
 
   app.after(() => {
+    app.get("/", async (request, reply) =>
+      reply.send({ status: "ok", serverId })
+    );
     app.register(balanceRouter, { prefix: "/balance" });
     app.register(transactionRouter, { prefix: "/transaction" });
   });
@@ -86,14 +91,15 @@ export const initServer = async () => {
   await app.ready();
 
   const openApiYaml = app.swagger({ yaml: true });
-  await fs.writeFile(join("docs", "openapi.yml"), openApiYaml);
+  // Not waiting for this to finish
+  fs.writeFile(join("docs", "openapi.yml"), openApiYaml);
 
   await app.listen({
     port,
     host: "0.0.0.0",
   });
 
-  console.log(`Server running on port ${port}`);
+  console.log(`Server running on port ${port} 🚀`);
 
   return app;
 };

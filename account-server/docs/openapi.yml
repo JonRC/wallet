@@ -18,6 +18,11 @@ components:
       name: key
   schemas: {}
 paths:
+  /:
+    get:
+      responses:
+        "200":
+          description: Default Response
   /balance/:
     get:
       tags:
@@ -73,7 +78,7 @@ paths:
                 type:
                   type: string
                   enum:
-                    - CASH_DEPOSIT
+                    - CASH
                     - REVERSAL
                 receiverType:
                   type: string
@@ -159,7 +164,7 @@ paths:
                               - REVERSAL
                               - TAXE
                               - FEE
-                              - CASH_DEPOSIT
+                              - CASH
                           receiverType:
                             type: string
                             enum:
@@ -236,8 +241,66 @@ paths:
                 required:
                   - detailedTransaction
                 additionalProperties: false
+  /transaction/withdraw:
+    post:
+      tags:
+        - Transaction
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                value:
+                  type: number
+                  exclusiveMinimum: true
+                  minimum: 0
+                type:
+                  type: string
+                  enum:
+                    - CASH
+                    - REVERSAL
+                receiverType:
+                  type: string
+                  enum:
+                    - ATM
+                    - PIX
+                    - POS
+                receiverReference:
+                  type: string
+                senderType:
+                  type: string
+                  enum:
+                    - USER
+                senderReference:
+                  type: string
+              required:
+                - value
+                - type
+                - receiverType
+                - receiverReference
+                - senderType
+                - senderReference
+              additionalProperties: false
+        required: true
+      security:
+        - customer: []
+        - internal: []
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  transactionId:
+                    type: string
+                required:
+                  - transactionId
+                additionalProperties: false
 servers:
-  - url: http://localhost:3000
+  - url: http://localhost:4000
     description: Development server
   - url: https://account.wallet.com
     description: Production server

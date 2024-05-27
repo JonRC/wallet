@@ -8,7 +8,7 @@ export const transactionTypes = [
   "REVERSAL",
   "TAXE",
   "FEE",
-  "CASH_DEPOSIT",
+  "CASH",
 ] as const;
 export const TransactionType = z.enum(transactionTypes);
 export type TransactionType = z.infer<typeof TransactionType>;

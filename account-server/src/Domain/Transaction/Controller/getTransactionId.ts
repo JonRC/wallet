@@ -1,3 +1,4 @@
+import { BalanceRepository } from "@/Domain/Balance/Repository/BalanceRepository";
 import { TransactionRepository } from "@/Domain/Transaction/Repository/TransactionRepository";
 import { TransactionUsecase } from "@/Domain/Transaction/Usecase/TransactionUsecase";
 import { Transaction } from "@/Entity/Transaction";
@@ -32,7 +33,11 @@ export const getTransactionId = async (app: FastifyInstance) =>
       const transactionId = request.params.id;
 
       const transactionRepository = TransactionRepository();
-      const transactionUsecase = TransactionUsecase({ transactionRepository });
+      const balanceRepository = BalanceRepository();
+      const transactionUsecase = TransactionUsecase({
+        transactionRepository,
+        balanceRepository,
+      });
 
       const { detailedTransaction } =
         await transactionUsecase.getTransactionDetail({

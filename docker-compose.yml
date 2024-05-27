@@ -4,7 +4,7 @@ services:
   account-server:
     build: ./account-server
     # ports:
-    #   - 3030-3050:3000
+    #   - 3000:3000
     env_file:
       - ./account-server/.env
     depends_on:
@@ -23,7 +23,6 @@ services:
     deploy:
       mode: replicated
       replicas: 5
-      endpoint_mode: vip
 
   account-postgres:
     container_name: account-postgres
@@ -34,3 +33,16 @@ services:
       - ./account-postgres/data:/var/lib/postgresql/data
     env_file:
       - ./account-postgres/.env
+
+  nginx:
+    container_name: wallet-nginx
+    build: ./nginx
+    ports:
+      - 4000:4000
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./nginx/nginx.conf
+          target: /etc/nginx/nginx.conf
+    depends_on:
+      - account-server

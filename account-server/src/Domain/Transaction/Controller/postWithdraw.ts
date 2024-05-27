@@ -15,14 +15,12 @@ const validTransactionTypes = [
   "REVERSAL",
 ] as const satisfies TransactionType[];
 
-const validReceiverTypes = ["USER"] as const satisfies ReceiverType[];
-
-const validSenderTypes = [
+const validReceiverTypes = [
   "ATM",
-  "BANK_ACCOUNT",
   "PIX",
   "POS",
 ] as const satisfies SenderType[];
+const validSenderTypes = ["USER"] as const satisfies ReceiverType[];
 
 const body = z.object({
   value: z.number().positive(),
@@ -39,9 +37,9 @@ const response = {
   }),
 } as const;
 
-export const postDeposit = async (app: FastifyInstance) =>
+export const postWithdraw = async (app: FastifyInstance) =>
   app.withTypeProvider<ZodTypeProvider>().route({
-    url: "/deposit",
+    url: "/withdraw",
     method: "POST",
     schema: {
       body,
@@ -60,13 +58,13 @@ export const postDeposit = async (app: FastifyInstance) =>
       });
 
       if (
-        body.senderType === "ATM" &&
+        body.receiverType === "ATM" &&
         body.type === "CASH" &&
-        body.receiverType === "USER"
+        body.senderType === "USER"
       ) {
-        const { transactionId } = await transactionUsecase.depositFromAtm({
-          atmId: body.senderReference,
-          userId: body.receiverReference,
+        const { transactionId } = await transactionUsecase.withdrawFromAtm({
+          atmId: body.receiverReference,
+          userId: body.senderReference,
           value: body.value,
         });
 

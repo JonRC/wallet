@@ -6,6 +6,7 @@ import { PoolClient } from "pg";
 
 type InsertTransactionInput = {
   userId: string;
+  minBalance?: number;
   transaction: Omit<Transaction, "id" | "createdAt" | "userId">;
   transactionItems: Omit<
     TransactionItem,
@@ -37,19 +38,14 @@ export const insertTransactionExecutor =
       (module) => module.default
     );
 
-    const { userId, transaction, transactionItems } = input;
+    const { userId, transaction, transactionItems, minBalance = 0 } = input;
 
     const transactionId = randomUUID();
 
     const itemsValue = transactionItems.reduce((total, item) => {
-      console.log({ item });
       return total + item.value;
     }, 0);
-    console.log({ input });
-    console.log({
-      value: transaction.value,
-      itemsValue,
-    });
+
     if (transaction.value !== itemsValue) {
       throw new Error(
         "Transaction value does not match the sum of items value"
@@ -64,12 +60,18 @@ export const insertTransactionExecutor =
     `);
 
     // Lock balance row
-    await client.query(sql`
+    const balance = await client.query(sql`
       SELECT *
       FROM balance
-      WHERE balance.user_id = ${userId}
+      WHERE
+        balance.user_id = ${userId} AND
+        balance.value >= ${minBalance}
+      LIMIT 1
       FOR UPDATE;
     `);
+    if (balance.rows.length === 0) {
+      throw new Error("Insufficient funds");
+    }
 
     // Insert transaction
     await client.query(sql`

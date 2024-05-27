@@ -7,7 +7,7 @@ const createTransactionTable = `
     'REVERSAL',
     'TAXE',
     'FEE',
-    'CASH_DEPOSIT'
+    'CASH'
   );
 
   CREATE TYPE receiver_type_enum AS ENUM (
