@@ -20,7 +20,7 @@ API: http://localhost:4000
 Documentation: http://localhost:4000/docs
 
 ## System Design and scratch
-[**See on Excalidraw**](https://excalidraw.com/#json=DDmx2KQ3YOJqQNQg_s3tO,WZ9mu9qLjactpuUG4NT7jg)
+[**See on Excalidraw**](https://excalidraw.com/#json=NPTQP2bL3_ZK85PQU2Tkj,r6k8aKETWiftosAir89ylg)
 
 ### Specification
 ![](/assets/wallet-spec.png)
