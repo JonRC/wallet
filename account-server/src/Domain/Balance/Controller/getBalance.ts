@@ -22,7 +22,7 @@ export const getBalance = (app: FastifyInstance) =>
     schema: {
       response,
       headers,
-      security: [{ apikey: [] }],
+      security: [{ customer: [] }],
       tags: ["Balance"],
     },
 

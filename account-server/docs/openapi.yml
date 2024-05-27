@@ -5,10 +5,17 @@ info:
   version: 1.0.0
 components:
   securitySchemes:
-    apikey:
+    customer:
+      type: http
+      scheme: bearer
+    internal:
       type: apiKey
       in: header
-      name: Authorization
+      name: key
+    partner:
+      type: apiKey
+      in: header
+      name: key
   schemas: {}
 paths:
   /balance/:
@@ -23,7 +30,7 @@ paths:
           name: user-id
           required: true
       security:
-        - apikey: []
+        - customer: []
       responses:
         "200":
           description: Default Response
@@ -49,8 +56,188 @@ paths:
                 required:
                   - message
                 additionalProperties: false
+  /transaction/deposit:
+    post:
+      tags:
+        - Transaction
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                value:
+                  type: number
+                  exclusiveMinimum: true
+                  minimum: 0
+                type:
+                  type: string
+                  enum:
+                    - CASH_DEPOSIT
+                    - REVERSAL
+                receiverType:
+                  type: string
+                  enum:
+                    - USER
+                receiverReference:
+                  type: string
+                senderType:
+                  type: string
+                  enum:
+                    - ATM
+                    - BANK_ACCOUNT
+                    - PIX
+                    - POS
+                senderReference:
+                  type: string
+              required:
+                - value
+                - type
+                - receiverType
+                - receiverReference
+                - senderType
+                - senderReference
+              additionalProperties: false
+        required: true
+      security:
+        - customer: []
+        - internal: []
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  transactionId:
+                    type: string
+                required:
+                  - transactionId
+                additionalProperties: false
+  /transaction/{id}:
+    get:
+      tags:
+        - Transaction
+      parameters:
+        - schema:
+            type: string
+            format: uuid
+          in: path
+          name: id
+          required: true
+      security:
+        - customer: []
+        - internal: []
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detailedTransaction:
+                    type: object
+                    properties:
+                      transaction:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                          userId:
+                            type: string
+                          value:
+                            type: number
+                          type:
+                            type: string
+                            enum:
+                              - TRANSFER
+                              - OPEN_WALLET
+                              - LOAN
+                              - DEBIT
+                              - REVERSAL
+                              - TAXE
+                              - FEE
+                              - CASH_DEPOSIT
+                          receiverType:
+                            type: string
+                            enum:
+                              - USER
+                              - PIX
+                              - BANK_ACCOUNT
+                              - BANK_SLIP
+                              - CREDIT_CARD
+                              - POS
+                              - ATM
+                          senderType:
+                            type: string
+                            enum:
+                              - USER
+                              - PIX
+                              - BANK_ACCOUNT
+                              - POS
+                              - ATM
+                          receiverReference:
+                            type: string
+                          senderReference:
+                            type: string
+                          description:
+                            type: string
+                          createdAt:
+                            type: string
+                            format: date-time
+                        required:
+                          - id
+                          - userId
+                          - value
+                          - type
+                          - receiverType
+                          - senderType
+                          - receiverReference
+                          - senderReference
+                          - description
+                          - createdAt
+                        additionalProperties: false
+                      transactionItems:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            transactionId:
+                              type: string
+                            value:
+                              type: number
+                            description:
+                              type: string
+                            type:
+                              type: string
+                              enum:
+                                - MAIN
+                                - TAX
+                                - FEE
+                            createdAt:
+                              type: string
+                              format: date-time
+                          required:
+                            - id
+                            - transactionId
+                            - value
+                            - description
+                            - type
+                            - createdAt
+                          additionalProperties: false
+                    required:
+                      - transaction
+                      - transactionItems
+                    additionalProperties: false
+                required:
+                  - detailedTransaction
+                additionalProperties: false
 servers:
-  - url: http://localhost:3030
+  - url: http://localhost:3000
     description: Development server
   - url: https://account.wallet.com
     description: Production server

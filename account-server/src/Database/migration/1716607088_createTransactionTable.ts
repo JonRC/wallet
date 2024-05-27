@@ -6,7 +6,8 @@ const createTransactionTable = `
     'DEBIT',
     'REVERSAL',
     'TAXE',
-    'FEE'
+    'FEE',
+    'CASH_DEPOSIT'
   );
 
   CREATE TYPE receiver_type_enum AS ENUM (
@@ -15,19 +16,22 @@ const createTransactionTable = `
     'BANK_ACCOUNT',
     'BANK_SLIP',
     'CREDIT_CARD',
-    'POS'
+    'POS',
+    'ATM'
   );
 
   CREATE TYPE sender_type_enum AS ENUM (
     'USER',
     'PIX',
     'BANK_ACCOUNT',
-    'POS'
+    'POS',
+    'ATM'
   );
 
   CREATE TABLE IF NOT EXISTS transaction (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL,
+    value FLOAT NOT NULL,
     type transaction_type_enum NOT NULL,
     receiver_type receiver_type_enum NOT NULL,
     sender_type sender_type_enum NOT NULL,
@@ -38,6 +42,7 @@ const createTransactionTable = `
 
     created_at TIMESTAMP DEFAULT NOW()
   );
+
 `;
 
 export default createTransactionTable;

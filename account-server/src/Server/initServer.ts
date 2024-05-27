@@ -11,8 +11,9 @@ import fs from "fs/promises";
 import { join } from "path";
 import { balanceRouter } from "@/Domain/Balance/Controller/balanceRouter";
 import { SwaggerTheme, SwaggerThemeNameEnum } from "swagger-themes";
+import { transactionRouter } from "@/Domain/Transaction/Controller/transactionRouter";
 
-const port = 3030;
+const port = 3000;
 
 export const initServer = async () => {
   const app = fastify();
@@ -38,10 +39,19 @@ export const initServer = async () => {
 
       components: {
         securitySchemes: {
-          apikey: {
+          customer: {
+            type: "http",
+            scheme: "bearer",
+          },
+          internal: {
             type: "apiKey",
             in: "header",
-            name: "Authorization",
+            name: "key",
+          },
+          partner: {
+            type: "apiKey",
+            in: "header",
+            name: "key",
           },
         },
       },
@@ -61,6 +71,16 @@ export const initServer = async () => {
 
   app.after(() => {
     app.register(balanceRouter, { prefix: "/balance" });
+    app.register(transactionRouter, { prefix: "/transaction" });
+  });
+
+  app.setErrorHandler((error, request, reply) => {
+    if (error.statusCode && error.statusCode < 500) {
+      reply.status(error.statusCode).send({ message: error.message });
+      return;
+    }
+    console.error(error);
+    reply.status(500).send({ message: "Internal server error" });
   });
 
   await app.ready();

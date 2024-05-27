@@ -8,7 +8,7 @@ const createTransactionItemTable = `
     description TEXT,
     type transaction_item_type NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
-    FOREIGN KEY (transaction_id) REFERENCES transaction(id)
+    FOREIGN KEY (transaction_id) REFERENCES transaction(id) ON DELETE CASCADE
   );
 `;
 export default createTransactionItemTable;

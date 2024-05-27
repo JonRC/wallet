@@ -2,10 +2,9 @@ name: wallet
 
 services:
   account-server:
-    container_name: account-server
     build: ./account-server
-    ports:
-      - "3030:3030"
+    # ports:
+    #   - 3030-3050:3000
     env_file:
       - ./account-server/.env
     depends_on:
@@ -21,6 +20,10 @@ services:
         - action: rebuild
           path: ./account-server/package.json
           target: /app/package.json
+    deploy:
+      mode: replicated
+      replicas: 5
+      endpoint_mode: vip
 
   account-postgres:
     container_name: account-postgres

@@ -8,4 +8,4 @@ COPY .env .
 RUN npm install
 COPY /src ./src
 
-ENTRYPOINT npm run dev
+ENTRYPOINT npm run watch
